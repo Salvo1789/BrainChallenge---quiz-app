@@ -72,4 +72,72 @@ const quizData = [
         correct: "a"
     }
 
-]
+];
+
+const quiz = document.getElementById("quiz");
+const questionEl = document.getElementById("question");
+const answersList = document.querySelectorAll(".answer");
+const a_text = document.getElementById("a_text");
+const b_text = document.getElementById("b_text");
+const c_text = document.getElementById("c_text");
+const d_text = document.getElementById("d_text");
+const submitBtn = document.getElementById("submit");
+
+let currentQuiz = 0;
+let score = 0;
+
+loadQuiz();
+
+function loadQuiz() {
+    deselectAnswers();
+
+    const currentQuizData = quizData[currentQuiz];
+
+    questionEl.innerText = currentQuizData.question;
+    a_text.innerText = currentQuizData.a;
+    b_text.innerText = currentQuizData.b;
+    c_text.innerText = currentQuizData.c;
+    d_text.innerText = currentQuizData.d;
+
+}
+
+function deselectAnswers() {
+answersList.forEach((answerEl) => {
+    answerEl.checked = false;
+    })
+}
+
+function getSelected() {
+    let answer = undefined;
+
+    answersList.forEach((answerEl) => {
+        if (answerEl.checked){
+            answer = answerEl.id;
+        }
+    });
+
+    return answer;
+}
+
+submitBtn.addEventListener("click",() => {
+    const selectedAnswer = getSelected();
+
+    if(selectedAnswer){
+        if (selectedAnswer === quizData[currentQuiz].correct){
+            score++;
+        }
+
+        currentQuiz++;
+
+        if (currentQuiz < quizData.length){
+            loadQuiz();
+        }else{
+            quiz.innerHTML = `
+            <h2>Hai risposto correttamente a ${score}/${quizData.length} domande.</h2>
+            
+            <button onclick="location.reload()">Ritenta</button>
+        `;
+        }
+    }
+    }
+)
